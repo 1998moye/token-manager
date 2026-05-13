@@ -28,15 +28,17 @@ export async function copyToClipboard(text) {
 //   }
 // platformName 参数保留以兼容调用方，不再使用
 export async function copyTokenConfig(token, platformName) {
+  // 优先使用 apiModel（第三方 API 实际调用名），回退到 model（官方模型名）
+  const apiModel = token.apiModel || token.model;
   const profile = {
     env: {
       ANTHROPIC_AUTH_TOKEN: token.apiKey,
       ANTHROPIC_BASE_URL: token.baseUrl,
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: token.model,
-      ANTHROPIC_DEFAULT_OPUS_MODEL: token.model,
-      ANTHROPIC_DEFAULT_SONNET_MODEL: token.model,
-      ANTHROPIC_MODEL: token.model,
-      ANTHROPIC_REASONING_MODEL: token.model
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: apiModel,
+      ANTHROPIC_DEFAULT_OPUS_MODEL: apiModel,
+      ANTHROPIC_DEFAULT_SONNET_MODEL: apiModel,
+      ANTHROPIC_MODEL: apiModel,
+      ANTHROPIC_REASONING_MODEL: apiModel
     },
     includeCoAuthoredBy: false
   };

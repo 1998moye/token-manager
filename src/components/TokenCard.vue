@@ -12,7 +12,12 @@
       <div class="card-top">
         <div class="card-info">
           <div class="token-name">{{ token.name }}</div>
-          <div class="token-model text-muted text-sm">{{ token.model }}</div>
+          <div class="token-model text-muted text-sm">
+            {{ token.model }}
+            <span v-if="token.apiModel && token.apiModel !== token.model" class="api-model-tag">
+              (API: {{ token.apiModel }})
+            </span>
+          </div>
         </div>
         <div class="card-actions">
           <el-button text size="small" circle title="复制完整配置（用于 ccswitch）" @click="handleCopyConfig">
@@ -218,6 +223,11 @@ async function handleCopyKey() {
 
 .token-model {
   margin-top: 2px;
+}
+
+.api-model-tag {
+  color: #3b82f6;
+  font-weight: 500;
 }
 
 .token-url-row,

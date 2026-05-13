@@ -40,7 +40,7 @@
 
       <!-- 模型选择 -->
       <div class="form-group">
-        <label class="form-label">模型</label>
+        <label class="form-label">官方模型</label>
         <el-select
           v-model="form.model"
           placeholder="选择模型"
@@ -57,6 +57,20 @@
             :value="model"
           />
         </el-select>
+      </div>
+
+      <!-- API 模型 -->
+      <div class="form-group">
+        <label class="form-label">
+          API 模型
+          <span class="label-optional">(可选，第三方 API 中转时填写)</span>
+        </label>
+        <el-input
+          v-model="form.apiModel"
+          placeholder="如：openai/gpt-4o，留空则使用官方模型名"
+          size="large"
+          class="full-width font-mono"
+        />
       </div>
 
       <!-- 名称 -->
@@ -165,6 +179,7 @@ const currentModels = computed(() => {
 const defaultForm = () => ({
   platform: 'openai',
   model: '',
+  apiModel: '',
   name: '',
   baseUrl: 'https://api.openai.com/v1',
   apiKey: '',
@@ -179,6 +194,7 @@ const draftRestored = ref(false);
 const { restoreDraft, saveDraft, clearDraft } = useAutoSave(() => ({
   platform: form.value.platform,
   model: form.value.model,
+  apiModel: form.value.apiModel,
   name: form.value.name,
   baseUrl: form.value.baseUrl,
   apiKey: form.value.apiKey,

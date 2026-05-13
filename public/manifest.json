@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Token 管理器",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "管理 AI API Token，支持一键复制和多平台多模型",
   "permissions": ["storage"],
+  "host_permissions": ["https://www.datalearner.com/*"],
   "action": {
     "default_popup": "index.html",
     "default_icon": {

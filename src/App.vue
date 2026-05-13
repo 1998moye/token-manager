@@ -7,6 +7,20 @@
         <span class="token-count" v-if="tokens.length">{{ tokens.length }} 个</span>
       </div>
       <div class="header-right">
+        <el-button
+          text
+          size="small"
+          :loading="updatingModels"
+          @click="handleUpdateModels"
+          title="更新模型列表"
+          class="refresh-btn"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </el-button>
         <el-input
           v-model="searchText"
           placeholder="搜索..."
@@ -116,6 +130,7 @@ import TokenCard from './components/TokenCard.vue';
 import TokenForm from './components/TokenForm.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
 import { getTokens, addToken, updateToken, deleteToken, saveTokens } from './services/storage.js';
+import { fetchModelsFromDataLearner, saveFetchedModels } from './services/modelUpdater.js';
 
 const tokens = ref([]);
 const searchText = ref('');
@@ -123,6 +138,21 @@ const formVisible = ref(false);
 const currentToken = ref(null);
 const deleteVisible = ref(false);
 const fileInputRef = ref(null);
+const updatingModels = ref(false);
+
+async function handleUpdateModels() {
+  updatingModels.value = true;
+  try {
+    const platformMap = await fetchModelsFromDataLearner();
+    const totalModels = Object.values(platformMap).reduce((sum, arr) => sum + arr.length, 0);
+    await saveFetchedModels(platformMap);
+    ElMessage.success(`模型更新成功，共 ${totalModels} 个`);
+  } catch (e) {
+    ElMessage.error('模型更新失败：' + e.message);
+  } finally {
+    updatingModels.value = false;
+  }
+}
 
 const filteredTokens = computed(() => {
   if (!searchText.value) return tokens.value;
@@ -268,6 +298,14 @@ async function handleFileImport(event) {
   display: flex;
   align-items: center;
   font-weight: 500;
+}
+
+.refresh-btn {
+  padding: 6px 8px;
+  color: #94a3b8;
+}
+.refresh-btn:hover {
+  color: #3b82f6;
 }
 
 .token-list {

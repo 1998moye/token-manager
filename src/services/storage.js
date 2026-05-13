@@ -49,3 +49,23 @@ export async function getSettings() {
 export async function saveSettings(settings) {
   await chrome.storage.local.set({ [STORAGE_KEY_SETTINGS]: settings });
 }
+
+// --- 自定义模型列表 ---
+
+export async function getCustomModels(platformId) {
+  const key = `custom_models_${platformId}`;
+  const result = await chrome.storage.local.get(key);
+  return result[key] || null;
+}
+
+export async function saveCustomModels(platformId, models) {
+  await chrome.storage.local.set({ [`custom_models_${platformId}`]: models });
+}
+
+export async function clearAllCustomModels() {
+  const allKeys = Object.keys(await chrome.storage.local.get(null));
+  const customKeys = allKeys.filter(k => k.startsWith('custom_models_'));
+  if (customKeys.length > 0) {
+    await chrome.storage.local.remove(customKeys);
+  }
+}

@@ -1,8 +1,7 @@
-// 18 个 AI 平台配置
-// 每个平台：id / name / color（主题色） / logo（单字母） / baseUrl / models
+// AI平台配置 - 模型数据来自 DataLearner (https://www.datalearner.com/ai-models/pretrained-models)
+// 自动提取，按平台关键词映射
 
 export const PLATFORMS = {
-  // ===== 国际大厂 =====
   openai: {
     id: 'openai',
     name: 'OpenAI',
@@ -11,23 +10,74 @@ export const PLATFORMS = {
     logo: 'O',
     baseUrl: 'https://api.openai.com/v1',
     models: [
-      'gpt-4o',
-      'gpt-4o-mini',
-      'gpt-4o-2024-11-20',
-      'gpt-4-turbo',
-      'gpt-4-turbo-2024-04-09',
+      'chat-gpt',
+      'gpt-1-image-mini',
+      'gpt-2',
+      'gpt-2b-001',
+      'gpt-3',
+      'gpt-3-5',
       'gpt-4',
-      'gpt-4-0613',
-      'gpt-3.5-turbo',
-      'gpt-3.5-turbo-16k',
-      'o1',
-      'o1-mini',
-      'o1-preview',
+      'gpt-4-1',
+      'gpt-4-1-mini',
+      'gpt-4-1-nano',
+      'gpt-4-5',
+      'gpt-4o',
+      'gpt-4o-2024-11-20',
+      'gpt-4o-2025-01-29',
+      'gpt-4o-2025-03-26',
+      'gpt-4o-mini',
+      'gpt-4o-mini-transcribe',
+      'gpt-4o-mini-transcribe-2025-12-15',
+      'gpt-4o-mini-tts',
+      'gpt-4o-mini-tts-2025-12-15',
+      'gpt-4o-transcribe',
+      'gpt-4v',
+      'gpt-5',
+      'gpt-5-1',
+      'gpt-5-1-codex',
+      'gpt-5-1-codex-max',
+      'gpt-5-1-codex-mini',
+      'gpt-5-1-pro',
+      'gpt-5-1-reasoning',
+      'gpt-5-2-codex',
+      'gpt-5-2-instant',
+      'gpt-5-2-pro',
+      'gpt-5-3',
+      'gpt-5-3-codex',
+      'gpt-5-3-codex-spark',
+      'gpt-5-4',
+      'gpt-5-4-mini',
+      'gpt-5-4-nano',
+      'gpt-5-4-pro',
+      'gpt-5-5',
+      'gpt-5-5-pro',
+      'gpt-5-codex',
+      'gpt-5-codex-mini',
+      'gpt-5-nano',
+      'gpt-5-pro',
+      'gpt-5-reasoning',
+      'gpt-image-1',
+      'gpt-image-1-mini',
+      'gpt-image-2',
+      'gpt-neox',
+      'gpt-oss-120b',
+      'gpt-oss-20b',
+      'gpt-realtime',
+      'gpt-realtime-mini-2025-12-15',
+      'minigpt-4',
       'o3',
-      'o3-mini',
-      'o3-mini-2025-01-31',
-      'chatgpt-4o-latest',
-      'gpt-4o-realtime-preview'
+      'o3-alpha',
+      'o3-pro',
+      'o4-mini',
+      'openai-gpt-5-2',
+      'openai-o1',
+      'openai-o1-mini',
+      'openai-o3-mini',
+      'openai-o3-mini-high',
+      'openai-o3-mini-low',
+      'openai-o3-mini-medium',
+      'the-model-behind-chatgpt-agent',
+      'visual-chat-gpt',
     ]
   },
 
@@ -39,17 +89,26 @@ export const PLATFORMS = {
     logo: 'A',
     baseUrl: 'https://api.anthropic.com',
     models: [
-      'claude-3-5-sonnet-20241022',
-      'claude-3-5-sonnet-20240620',
-      'claude-3-5-haiku-20241022',
-      'claude-3-5-haiku-20240620',
-      'claude-3-opus-20240229',
-      'claude-3-sonnet-20240229',
-      'claude-3-haiku-20240307',
-      'claude-opus-4-20250514',
-      'claude-sonnet-4-20250514',
-      'claude-haiku-4-20250514',
-      'claude-3-5-sonnet-latest'
+      'anthropic-claude-opus-4-5',
+      'claude-3-5-haiku',
+      'claude-3-5-sonnet',
+      'claude-3-5-sonnet-new',
+      'claude-5-sonnet',
+      'claude-haiku-4-5',
+      'claude-mythos-preview',
+      'claude-opus-4',
+      'claude-opus-4-1',
+      'claude-opus-4-6',
+      'claude-opus-4-7',
+      'claude-opus-4-7/analysis',
+      'claude-sonnet-3-7',
+      'claude-sonnet-3-7-thinking',
+      'claude-sonnet-4',
+      'claude-sonnet-4-5',
+      'claude-sonnet-4-6',
+      'claude3-haiku',
+      'claude3-opus',
+      'claude3-sonnet',
     ]
   },
 
@@ -61,16 +120,541 @@ export const PLATFORMS = {
     logo: 'G',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     models: [
-      'gemini-2.0-flash',
-      'gemini-2.0-flash-exp',
-      'gemini-2.0-flash-lite',
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-      'gemini-2.5-pro',
-      'gemini-1.5-flash',
-      'gemini-1.5-flash-8b',
-      'gemini-1.5-pro',
-      'gemini-exp-1206'
+      'codegemma-2b',
+      'codegemma-7b',
+      'codegemma-7b-it',
+      'embeddinggemma-300m',
+      'functiongemma-270m-it',
+      'gemini-2-flash-exp',
+      'gemini-2-pro',
+      'gemini-2-0-flash-lite',
+      'gemini-2-5-deep-think',
+      'gemini-2-5-flash-2509',
+      'gemini-2-5-flash-image-preview',
+      'gemini-2-5-flash-lite-2509',
+      'gemini-2-5-pro-preview-05-06',
+      'gemini-2-5-pro-preview-06-05',
+      'gemini-2-5-computer-use-preview-10-2025',
+      'gemini-2-5-flash-audio-2512',
+      'gemini-3-0-flash-lite',
+      'gemini-3-0-pro-preview-11-2025',
+      'gemini-3-1-flash-tts',
+      'gemini-3-1-pro-preview',
+      'gemini-3-2-flash',
+      'gemini-3-deep-think',
+      'gemini-3-deep-think-2026-02',
+      'gemini-embedding-001',
+      'gemini-embedding-2',
+      'gemini-nano',
+      'gemini-pro',
+      'gemini-ultra',
+      'gemini3-flash',
+      'gemma-1-1-2b-it',
+      'gemma-1-1-7b-it',
+      'gemma-2-9b',
+      'gemma-2b',
+      'gemma-2b-instruct',
+      'gemma-3-12b-it',
+      'gemma-3-1b-it',
+      'gemma-3-270m',
+      'gemma-3-27b-it',
+      'gemma-3-4b-it',
+      'gemma-3n-e2b',
+      'gemma-3n-e4b',
+      'gemma-4-120b',
+      'gemma-7b',
+      'gemma-7b-instruct',
+      'google-gemma-4-26b-a4b',
+      'google-gemma-4-31b',
+      'google-gemma-4-e2b',
+      'google-gemma-4-e4b',
+      'google-nano-banana-2',
+      'google-nano-banana-pro',
+      'medgemma-1-5-4b',
+      'medgemma-27b-it',
+      'medgemma-4b-it',
+      'paligemma-3b',
+      'recurrentgemma-2b',
+      'recurrentgemma-2b-it',
+      'translategemma-12b',
+      'translategemma-27b',
+      'translategemma-4b',
+    ]
+  },
+
+  deepseek: {
+    id: 'deepseek',
+    name: 'DeepSeek',
+    nameCn: 'DeepSeek',
+    color: '#2B9BF4',
+    logo: 'D',
+    baseUrl: 'https://api.deepseek.com',
+    models: [
+      'deepseek-v2-5',
+      'deepseek-coder-33b-instruct',
+      'deepseek-coder-6-7b-instruct',
+      'deepseek-llm-67b-base',
+      'deepseek-llm-67b-chat',
+      'deepseek-llm-7b-base',
+      'deepseek-llm-7b-chat',
+      'deepseek-ocr',
+      'deepseek-ocr-2',
+      'deepseek-prover-v2',
+      'deepseek-r1',
+      'deepseek-r1-0528',
+      'deepseek-r1-0528-qwen3-8b',
+      'deepseek-r1-distill-llama-70b',
+      'deepseek-r1-distill-qwen-7b',
+      'deepseek-r1-lite-preview',
+      'deepseek-r1-zero',
+      'deepseek-v-3-1',
+      'deepseek-v2-moe-236b',
+      'deepseek-v2-moe-236b-chat',
+      'deepseek-v3',
+      'deepseek-v3-1-terminus',
+      'deepseek-v3-0324',
+      'deepseek-v3-2',
+      'deepseek-v3-2-exp',
+      'deepseek-v3-2-speciale',
+      'deepseek-v3-base',
+      'deepseek-v4-flash',
+      'deepseek-v4-pro',
+      'deepseek-vl-1-3b-base',
+      'deepseek-vl-1-3b-chat',
+      'deepseek-vl-7b-base',
+      'deepseek-vl-7b-chat',
+      'deepseekmath-v2',
+      'deepseekmoe-145b-base',
+      'deepseekmoe-145b-chat',
+      'deepseekmoe-16b-base',
+      'deepseekmoe-16b-chat',
+    ]
+  },
+
+  dashscope: {
+    id: 'dashscope',
+    name: '通义千问',
+    nameCn: '通义千问 (阿里)',
+    color: '#FF6A00',
+    logo: 'Q',
+    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    models: [
+      'codeqwen1-5-7b',
+      'codeqwen1-5-7b-chat',
+      'gme-qwen2-vl-2b',
+      'gme-qwen2-vl-7b',
+      'qwen-1-8b',
+      'qwen-14b',
+      'qwen-14b-chat',
+      'qwen-3.6-plus-preview',
+      'qwen-4b',
+      'qwen-4b-thinking-2507',
+      'qwen-72b',
+      'qwen-7b',
+      'qwen-7b-chat',
+      'qwen-audio',
+      'qwen-image',
+      'qwen-image-2-0',
+      'qwen-image-2512',
+      'qwen-image-edit',
+      'qwen-image-edit-2509',
+      'qwen-image-edit-2511',
+      'qwen-tts-2025-05-22',
+      'qwen-vl',
+      'qwen-vl-max',
+      'qwen-vl-plus',
+      'qwen1-5-0-5b-chat',
+      'qwen1-5-1-8b-chat',
+      'qwen1-5-110b',
+      'qwen1-5-110b-chat',
+      'qwen1-5-14b-chat',
+      'qwen1-5-32b',
+      'qwen1-5-4b-chat',
+      'qwen1-5-72b-chat',
+      'qwen1-5-7b-chat',
+      'qwen1-5-moe-a2-7b',
+      'qwen1-5-moe-a2-7b-chat',
+      'qwen2-5-72b',
+      'qwen2-5-0-5b',
+      'qwen2-5-1-5b',
+      'qwen2-5-14b',
+      'qwen2-5-32b',
+      'qwen2-5-3b',
+      'qwen2-5-7b',
+      'qwen2-5-coder-32b-instruct',
+      'qwen2-5-math-72b',
+      'qwen2-5-max',
+      'qwen2-5-omni-7b',
+      'qwen2-5-vl-32b-instruct',
+      'qwen2-5-vl-72b-instruct',
+      'qwen2-0-5b',
+      'qwen2-1-5b',
+      'qwen2-57b-a14b',
+      'qwen2-72b',
+      'qwen2-72b-instruct',
+      'qwen2-7b',
+      'qwen3-14b',
+      'qwen3-235b-a22b-2507-thinking',
+      'qwen3-235b-a22b-instruct-2507',
+      'qwen3-235b-a22b-thinking-2507',
+      'qwen3-30b-a3b',
+      'qwen3-30b-a3b-instruct-2507',
+      'qwen3-4b',
+      'qwen3-5-122b-a10b',
+      'qwen3-5-27b-dense',
+      'qwen3-5-35b-a3b',
+      'qwen3-5-35b-a3b-instruct',
+      'qwen3-5-397b-a17b',
+      'qwen3-5-9b-instruct',
+      'qwen3-5-omni-flash',
+      'qwen3-5-omni-light',
+      'qwen3-5-omni-plus',
+      'qwen3-6-27b',
+      'qwen3-6-35b-a3b',
+      'qwen3-6-max-preview',
+      'qwen3-8b',
+      'qwen3-asr',
+      'qwen3-asr-flash',
+      'qwen3-coder-30b-a3b-instruct',
+      'qwen3-coder-480b-a35b-instruct',
+      'qwen3-coder-next',
+      'qwen3-embedding-0-6b',
+      'qwen3-embedding-4b',
+      'qwen3-embedding-8b',
+      'qwen3-max',
+      'qwen3-max-preview',
+      'qwen3-next-80b-a3b',
+      'qwen3-omni-30b-a3b',
+      'qwen3-reranker-0-6b',
+      'qwen3-reranker-4b',
+      'qwen3-reranker-8b',
+      'qwen3-tts-0-6b',
+      'qwen3-tts-1-7b',
+      'qwen3-tts-12hz-0-6b-base',
+      'qwen3-tts-12hz-0-6b-customvoice',
+      'qwen3-tts-12hz-1-7b-base',
+      'qwen3-tts-12hz-1-7b-customvoice-2b',
+      'qwen3-tts-12hz-1-7b-voicedesign-2b',
+      'qwen3-tts-flash',
+      'qwen3-vl-235b-a22b-instruct',
+      'qwen3-vl-2b-instruct',
+      'qwen3-vl-2b-thinking',
+      'qwen3-vl-32b-instruct',
+      'qwen3-vl-32b-thinking',
+      'qwen3-vl-4b-instruct',
+      'qwen3-vl-4b-thinking',
+      'qwen3-vl-8b-instruct',
+      'qwen3-vl-8b-thinking',
+      'qwen3-vl-embedding-2b',
+      'qwen3-vl-embedding-8b',
+      'qwen3-vl-reranker-2b',
+      'qwen3-vl-reranker-8b',
+    ]
+  },
+
+  zhipu: {
+    id: 'zhipu',
+    name: '智谱',
+    nameCn: '智谱 GLM',
+    color: '#5B9BD5',
+    logo: 'Z',
+    baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+    models: [
+      'chatglm-6b',
+      'chatglm2-12b',
+      'chatglm2-6b',
+      'chatglm2-6b-32k',
+      'chatglm3-1-5b',
+      'chatglm3-3b',
+      'chatglm3-6b',
+      'chatglm3-6b-32k',
+      'chatglm3-6b-base',
+      'glm-130b',
+      'glm-4-1v-9b-base',
+      'glm-4-1v-9b-thinking',
+      'glm-4-5-moe-106b-a12b-0715',
+      'glm-4-5-moe-355b-a32b-0715',
+      'glm-4-5v',
+      'glm-4-6',
+      'glm-4-6v-106b-a12b',
+      'glm-4-6v-flash-9b',
+      'glm-4-7',
+      'glm-4-7-flash',
+      'glm-4-9b',
+      'glm-4-9b-chat',
+      'glm-4-9b-chat-1m',
+      'glm-4-moe-100b-a10b',
+      'glm-4v-9b',
+      'glm-5',
+      'glm-5-1',
+      'glm-5-turbo',
+      'glm-5v-turbo',
+      'glm-asr-2512',
+      'glm-asr-nano-2512',
+      'glm-image',
+      'glm-ocr',
+      'glm4',
+      'visualglm-6b',
+    ]
+  },
+
+  lingyi: {
+    id: 'lingyi',
+    name: '零一万物',
+    nameCn: '零一万物',
+    color: '#FF4757',
+    logo: 'Y',
+    baseUrl: 'https://api.lingyiwanwu.com/v1',
+    models: [
+      'yi-1-5-34b',
+      'yi-1-5-6b',
+      'yi-1-5-9b',
+      'yi-34b',
+      'yi-34b-200k',
+      'yi-6b',
+      'yi-6b-200k',
+      'yi-9b',
+      'yi-vl-34b',
+      'yi-vl-6b',
+    ]
+  },
+
+  minimax: {
+    id: 'minimax',
+    name: 'MiniMax',
+    nameCn: 'MiniMax',
+    color: '#00C853',
+    logo: 'Mi',
+    baseUrl: 'https://api.minimax.chat/v1',
+    models: [
+      'minimax-hailuo-2-3',
+      'minimax-hailuo-2-3-fast',
+      'minimax-m1-40k',
+      'minimax-m1-80k',
+      'minimax-m2',
+      'minimax-m2-1-preview',
+      'minimax-m2-2',
+      'minimax-m2-5',
+      'minimax-m2-7',
+      'minimax-m3',
+      'minimax-speech-2-6',
+      'minimax-text-01',
+    ]
+  },
+
+  moonshot: {
+    id: 'moonshot',
+    name: 'Kimi',
+    nameCn: 'Kimi (Moonshot)',
+    color: '#8B5CF6',
+    logo: 'K',
+    baseUrl: 'https://api.moonshot.cn/v1',
+    models: [
+      'kimi-k-1-5-long',
+      'kimi-k-1-5-short',
+      'kimi-k1-6-ioi',
+      'kimi-k1-6-ioi-high',
+      'kimi-k2-0711-base-preview',
+      'kimi-k2-0905',
+      'kimi-k2-5',
+      'kimi-k2-6',
+      'kimi-k2-reasoning',
+    ]
+  },
+
+  doubao: {
+    id: 'doubao',
+    name: '豆包',
+    nameCn: '豆包 (字节)',
+    color: '#FF6B6B',
+    logo: 'Do',
+    baseUrl: 'https://ark.cn-beijing.volces.com/api/v3',
+    models: [
+      'bytedance-seed-stable-diffcoder-8b-base',
+      'doubao-seed-2.0-lite',
+      'doubao-seed-2.0-pro',
+      'seed-1-6-embedding-250328',
+      'seed-1-6-embedding-250615',
+      'seed1-6-embedding-1215',
+      'seedance-2-0',
+    ]
+  },
+
+  wenxin: {
+    id: 'wenxin',
+    name: '文心一言',
+    nameCn: '文心一言 (百度)',
+    color: '#4A90D9',
+    logo: 'W',
+    baseUrl: 'https://qianfan.baidubce.com/v2',
+    models: [
+      'baidu-ernie',
+      'ernie',
+      'ernie-2',
+      'ernie-3',
+      'ernie-4-5',
+      'ernie-4-5-0-3b-base',
+      'ernie-4-5-21b-a3b-base',
+      'ernie-4-5-300b-a47b',
+      'ernie-4-5-300b-a47b-base',
+      'ernie-4-5-vl-28b-a3b-paddle',
+      'ernie-4-5-vl-28b-base-a3b',
+      'ernie-4-5-vl-424b-a47b-base',
+      'ernie-4-5-vl-28b-a3b',
+      'ernie-4-5-vl-28b-a3b-thinking',
+      'ernie-5-0',
+      'ernie-5-1-preview',
+      'ernie-5.0-thinking-preview',
+      'ernie-vilg2',
+      'ernie-x1',
+    ]
+  },
+
+  hunyuan: {
+    id: 'hunyuan',
+    name: '混元',
+    nameCn: '混元 (腾讯)',
+    color: '#E53935',
+    logo: 'H',
+    baseUrl: 'https://api.hunyuan.cloud.tencent.com',
+    models: [
+      'hunyuan-0-5-b',
+      'hunyuan-1-8-b',
+      'hunyuan-4-b',
+      'hunyuan-7-b',
+      'hunyuan-a13b-instruct',
+      'hunyuan-mt-7b',
+      'hunyuan-nlp-1t',
+      'hunyuan-t1',
+      'hunyuan-turbos',
+      'tencent-hunyuanimage-3-0-instruct',
+    ]
+  },
+
+  baichuan: {
+    id: 'baichuan',
+    name: '百川智能',
+    nameCn: '百川智能',
+    color: '#52C41A',
+    logo: 'B',
+    baseUrl: 'https://api.baichuan-ai.com/v1',
+    models: [
+      'baichuan-13b-base',
+      'baichuan-13b-chat',
+      'baichuan-7b',
+      'baichuan-m3-235b',
+      'baichuan2-13b-base',
+      'baichuan2-13b-chat',
+      'baichuan2-192k',
+      'baichuan2-7b-base',
+      'baichuan2-7b-chat',
+      'baichuan3',
+    ]
+  },
+
+  stepfun: {
+    id: 'stepfun',
+    name: '阶跃星辰',
+    nameCn: '阶跃星辰',
+    color: '#6B5CE7',
+    logo: 'S',
+    baseUrl: 'https://api.stepfun.com/v1',
+    models: [
+      'nextstep-1-1',
+      'step3',
+      'stepfun-flash-3-5',
+    ]
+  },
+
+  xai: {
+    id: 'xai',
+    name: 'xAI Grok',
+    nameCn: 'xAI Grok',
+    color: '#F97316',
+    logo: 'X',
+    baseUrl: 'https://api.x.ai/v1',
+    models: [
+      'grok-0',
+      'grok-1',
+      'grok-1-5',
+      'grok-2',
+      'grok-3',
+      'grok-3-5',
+      'grok-3-mini-reasoning',
+      'grok-3-reasoning-beta',
+      'grok-4',
+      'grok-4-1',
+      'grok-4-1-fast',
+      'grok-4-1-thinking',
+      'grok-4-2',
+      'grok-4-3-beta',
+      'grok-4-code',
+      'grok-4-code-test-time-compute',
+      'grok-4-fast',
+      'grok-4-heavy',
+      'grok-4-test-time-compute',
+      'grok-code-fast-1',
+      'grok-image-1-0',
+      'grok-imagine-0-9',
+      'grok3-mini',
+    ]
+  },
+
+  mistral: {
+    id: 'mistral',
+    name: 'Mistral AI',
+    nameCn: 'Mistral AI',
+    color: '#CB2D4A',
+    logo: 'M',
+    baseUrl: 'https://api.mistral.ai/v1',
+    models: [
+      'mistral-7b',
+      'mistral-7b-instruct',
+      'mistral-7b-instruct-v0-2',
+      'mistral-7b-instruct-v0-3',
+      'mistral-7b-moe',
+      'mistral-7b-v0-2',
+      'mistral-7b-v0-3',
+      'mistral-large',
+      'mistral-large-3-25-12',
+      'mistral-nemo-base-12b',
+      'mistral-nemo-instruct-12b',
+      'mistral-next',
+      'mistral-small-24b-base-2501',
+      'mistral-small-24b-instruct-2501',
+      'mistral-small-3-1-24b-base-2503',
+      'mistral-small-3-1-24b-instruct-2503',
+      'mistral-small-3-2-24b-instruct-2506',
+    ]
+  },
+
+  cohere: {
+    id: 'cohere',
+    name: 'Cohere',
+    nameCn: 'Cohere',
+    color: '#2B5876',
+    logo: 'C',
+    baseUrl: 'https://api.cohere.ai/v1',
+    models: [
+      'c4ai-command-a-03-2025',
+      'c4ai-command-r-plus',
+      'c4ai-command-r-v01',
+      'c4ai-command-r7b-12-2024',
+    ]
+  },
+
+  perplexity: {
+    id: 'perplexity',
+    name: 'Perplexity',
+    nameCn: 'Perplexity',
+    color: '#20B4F5',
+    logo: 'P',
+    baseUrl: 'https://api.perplexity.ai',
+    models: [
+      'sonar-pro',
+      'sonar-reasoning-pro',
+      'sonar-reasoning',
+      'sonar',
     ]
   },
 
@@ -89,262 +673,10 @@ export const PLATFORMS = {
       'llama-3.2-11b-vision-preview',
       'llama-3.2-90b-text-instruct',
       'mixtral-8x7b-32768',
-      'gemma-7b-it'
+      'gemma-7b-it',
     ]
   },
 
-  mistral: {
-    id: 'mistral',
-    name: 'Mistral AI',
-    nameCn: 'Mistral AI',
-    color: '#CB2D4A',
-    logo: 'M',
-    baseUrl: 'https://api.mistral.ai/v1',
-    models: [
-      'mistral-large-latest',
-      'mistral-small-latest',
-      'mistral-medium-latest',
-      'codestral-latest',
-      'codestral-2501',
-      'mistral-tiny',
-      'mistral-nemo-2407'
-    ]
-  },
-
-  cohere: {
-    id: 'cohere',
-    name: 'Cohere',
-    nameCn: 'Cohere',
-    color: '#2B5876',
-    logo: 'C',
-    baseUrl: 'https://api.cohere.ai/v1',
-    models: [
-      'command-r-plus-08-2024',
-      'command-r-plus',
-      'command-r7b-12-2024',
-      'command-r',
-      'command-medium-nightly',
-      'c4ai- command-r-08-2024'
-    ]
-  },
-
-  perplexity: {
-    id: 'perplexity',
-    name: 'Perplexity',
-    nameCn: 'Perplexity',
-    color: '#20B4F5',
-    logo: 'P',
-    baseUrl: 'https://api.perplexity.ai',
-    models: [
-      'sonar-pro',
-      'sonar-reasoning-pro',
-      'sonar-reasoning',
-      'sonar'
-    ]
-  },
-
-  // ===== 国内大厂 =====
-  deepseek: {
-    id: 'deepseek',
-    name: 'DeepSeek',
-    nameCn: 'DeepSeek',
-    color: '#2B9BF4',
-    logo: 'D',
-    baseUrl: 'https://api.deepseek.com',
-    models: [
-      'deepseek-chat',
-      'deepseek-coder',
-      'deepseek-coder-32b',
-      'deepseek-reasoner',
-      'deepseek-r1',
-      'deepseek-r1-32b',
-      'deepseek-r1-70b',
-      'deepseek-v3',
-      'deepseek-v3-0324'
-    ]
-  },
-
-  moonshot: {
-    id: 'moonshot',
-    name: 'Kimi',
-    nameCn: 'Kimi (Moonshot)',
-    color: '#8B5CF6',
-    logo: 'K',
-    baseUrl: 'https://api.moonshot.cn/v1',
-    models: [
-      'moonshot-v1-8k',
-      'moonshot-v1-32k',
-      'moonshot-v1-128k'
-    ]
-  },
-
-  minimax: {
-    id: 'minimax',
-    name: 'MiniMax',
-    nameCn: 'MiniMax',
-    color: '#00C853',
-    logo: 'Mi',
-    baseUrl: 'https://api.minimax.chat/v1',
-    models: [
-      'MiniMax-Text-01',
-      'MiniMax-Embed-02',
-      'MiniMax-M2',
-      'MiniMax-M2.7',
-      'MiniMax-M2.5',
-      'MiniMax-M2.1',
-      'MiniMax-M2-Ultra',
-      'abab6-chat',
-      'abab6.5s-chat',
-      'abab6.5-chat'
-    ]
-  },
-
-  doubao: {
-    id: 'doubao',
-    name: '豆包',
-    nameCn: '豆包 (字节)',
-    color: '#FF6B6B',
-    logo: 'Do',
-    baseUrl: 'https://ark.cn-beijing.volces.com/api/v3',
-    models: [
-      'doubao-pro-32k',
-      'doubao-pro-4k',
-      'doubao-pro-32k-240615',
-      'doubao-lite-32k',
-      'doubao-lite-4k'
-    ]
-  },
-
-  dashscope: {
-    id: 'dashscope',
-    name: '通义千问',
-    nameCn: '通义千问 (阿里)',
-    color: '#FF6A00',
-    logo: 'Q',
-    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-    models: [
-      'qwen-plus',
-      'qwen-plus-latest',
-      'qwen-turbo',
-      'qwen-turbo-latest',
-      'qwen-max',
-      'qwen-max-longcontext',
-      'qwen2.5-72b-instruct',
-      'qwen2.5-32b-instruct',
-      'qwen2.5-14b-instruct',
-      'qwen2.5-7b-instruct',
-      'qwen2.5-coder-32b-instruct',
-      'qwen2.5-math-72b-instruct',
-      'qwen-long',
-      'qwen-audio-turbo',
-      'qwen-vl-plus',
-      'qwen-vl-max'
-    ]
-  },
-
-  wenxin: {
-    id: 'wenxin',
-    name: '文心一言',
-    nameCn: '文心一言 (百度)',
-    color: '#4A90D9',
-    logo: 'W',
-    baseUrl: 'https://qianfan.baidubce.com/v2',
-    models: [
-      'ernie-4.0-8k',
-      'ernie-4.0-8k-preview',
-      'ernie-4.0-6k',
-      'ernie-3.5-8k',
-      'ernie-3.5-8k-pro',
-      'ernie-speed-128k',
-      'ernie-speed-8k',
-      'ernie-lite-8k',
-      'ernie-character-8k'
-    ]
-  },
-
-  hunyuan: {
-    id: 'hunyuan',
-    name: '混元',
-    nameCn: '混元 (腾讯)',
-    color: '#E53935',
-    logo: 'H',
-    baseUrl: 'https://api.hunyuan.cloud.tencent.com',
-    models: [
-      'hunyuan-turb',
-      'hunyuan-pro',
-      'hunyuan-lite'
-    ]
-  },
-
-  zhipu: {
-    id: 'zhipu',
-    name: '智谱',
-    nameCn: '智谱 GLM',
-    color: '#5B9BD5',
-    logo: 'Z',
-    baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-    models: [
-      'glm-4-plus',
-      'glm-4-flash',
-      'glm-4',
-      'glm-4v-plus',
-      'glm-4v',
-      'glm-4-airx',
-      'glm-4-air',
-      'glm-4-long',
-      'glm-z1c-32k',
-      'glm-3-turbo'
-    ]
-  },
-
-  stepfun: {
-    id: 'stepfun',
-    name: '阶跃星辰',
-    nameCn: '阶跃星辰',
-    color: '#6B5CE7',
-    logo: 'S',
-    baseUrl: 'https://api.stepfun.com/v1',
-    models: [
-      'step-2-16k',
-      'step-2-mini-32k',
-      'step-1-vision-32k',
-      'step-1-o1'
-    ]
-  },
-
-  lingyi: {
-    id: 'lingyi',
-    name: '零一万物',
-    nameCn: '零一万物',
-    color: '#FF4757',
-    logo: 'Y',
-    baseUrl: 'https://api.lingyiwanwu.com/v1',
-    models: [
-      'yi-lightning',
-      'yi-34b-chat',
-      'yi-large',
-      'yi-large-rag'
-    ]
-  },
-
-  baichuan: {
-    id: 'baichuan',
-    name: '百川智能',
-    nameCn: '百川智能',
-    color: '#52C41A',
-    logo: 'B',
-    baseUrl: 'https://api.baichuan-ai.com/v1',
-    models: [
-      'baichuan4-turbo',
-      'baichuan4-air',
-      'baichuan3-turbo-128k',
-      'baichuan3-turbo',
-      'baichuan3-5-turbo',
-      'baichuan3-5-suno'
-    ]
-  },
-
-  // ===== 聚合平台 =====
   siliconflow: {
     id: 'siliconflow',
     name: 'SiliconFlow',
@@ -362,7 +694,7 @@ export const PLATFORMS = {
       'deepseek-ai/DeepSeek-Coder-V2-16B',
       'Anthropic/claude-3.5-sonnet-20241022',
       'Qwen/Qwen2-VL-72B-Instruct',
-      'google/gemini-2.0-flash-exp'
+      'google/gemini-2.0-flash-exp',
     ]
   },
 
@@ -378,7 +710,7 @@ export const PLATFORMS = {
       'deepseek-ai/DeepSeek-R1',
       'Qwen/Qwen2.5-72B-Instruct',
       'THUDM/GLM-4-9B-Chat',
-      'mistralai/Mistral-7B-Instruct-v0.3'
+      'mistralai/Mistral-7B-Instruct-v0.3',
     ]
   },
 
@@ -395,24 +727,7 @@ export const PLATFORMS = {
       'meta-llama/Llama-3.3-70B-Instruct-Turbo',
       'mistralai/Mixtral-8x22B-Instruct-v0.1',
       'Qwen/Qwen2.5-72B-Instruct-Turbo',
-      'deepseek-ai/DeepSeek-V3'
-    ]
-  },
-
-  // ===== 其他 =====
-  xai: {
-    id: 'xai',
-    name: 'xAI Grok',
-    nameCn: 'xAI Grok',
-    color: '#F97316',
-    logo: 'X',
-    baseUrl: 'https://api.x.ai/v1',
-    models: [
-      'grok-2',
-      'grok-2-mini',
-      'grok-beta',
-      'grok-2-1212',
-      'grok-2-mini-1212'
+      'deepseek-ai/DeepSeek-V3',
     ]
   },
 
@@ -432,9 +747,10 @@ export const PLATFORMS = {
       'qwen2.5',
       'deepseek-r1',
       'phi3',
-      'gemma2'
+      'gemma2',
     ]
-  }
+  },
+
 };
 
 // 平台列表（用于下拉选择，按类别分组）
@@ -453,10 +769,42 @@ export function getPlatform(id) {
   return PLATFORMS[id] || null;
 }
 
-// 根据平台 ID 获取模型列表
+// 自定义模型列表（运行时覆盖，从 storage 加载）
+let _customModels = {};
+
+export function setCustomModels(platformId, models) {
+  _customModels[platformId] = models;
+}
+
+export function clearCustomModels(platformId) {
+  delete _customModels[platformId];
+}
+
+export function getCustomModelsState() {
+  return { ..._customModels };
+}
+
+// 根据平台 ID 获取模型列表（优先使用内存中的自定义列表）
 export function getModelsByPlatform(platformId) {
+  if (_customModels[platformId]) {
+    return _customModels[platformId];
+  }
   const platform = PLATFORMS[platformId];
   return platform ? platform.models : [];
+}
+
+// 从 storage 加载自定义模型列表到内存
+export async function loadCustomModelsFromStorage() {
+  try {
+    const result = await chrome.storage?.local?.get(null);
+    if (!result) return;
+    for (const key in result) {
+      if (key.startsWith('custom_models_')) {
+        const platformId = key.replace('custom_models_', '');
+        _customModels[platformId] = result[key];
+      }
+    }
+  } catch (e) { /* fallback */ }
 }
 
 // API Key 脱敏

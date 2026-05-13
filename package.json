@@ -1,6 +1,6 @@
 {
   "name": "token-manager",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "AI API Token 管理插件，支持一键复制和多平台多模型",
   "scripts": {

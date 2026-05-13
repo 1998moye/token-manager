@@ -84,6 +84,37 @@
 
         <el-divider />
 
+        <el-divider />
+
+        <div class="setting-group">
+          <label class="setting-label">模型列表</label>
+          <div class="setting-row" style="flex-wrap: wrap; gap: 8px;">
+            <el-button
+              type="primary"
+              size="default"
+              :loading="updatingModels"
+              @click="handleUpdateModels"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              更新模型列表
+            </el-button>
+            <el-button
+              size="default"
+              :disabled="!hasCustomModels"
+              @click="handleResetModels"
+            >
+              恢复默认
+            </el-button>
+          </div>
+          <p class="setting-hint">
+            从 DataLearner 同步最新模型数据
+          </p>
+        </div>
+
         <div class="setting-group">
           <label class="setting-label">关于</label>
           <p class="about-text">
@@ -120,6 +151,8 @@ import TokenCard from './components/TokenCard.vue';
 import TokenForm from './components/TokenForm.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
 import { getTokens, addToken, updateToken, deleteToken, saveTokens, getSettings, saveSettings } from './services/storage.js';
+import { fetchModelsFromDataLearner, saveFetchedModels, resetToDefaultModels } from './services/modelUpdater.js';
+import { getCustomModelsState } from './data/platforms.js';
 
 const tokens = ref([]);
 const searchText = ref('');
@@ -128,6 +161,38 @@ const currentToken = ref(null);
 const deleteVisible = ref(false);
 const fileInputRef = ref(null);
 const settings = ref({ sortBy: 'updatedAt', sortOrder: 'desc' });
+const updatingModels = ref(false);
+const hasCustomModels = ref(false);
+
+function checkCustomModels() {
+  const state = getCustomModelsState();
+  hasCustomModels.value = Object.keys(state).length > 0;
+}
+
+async function handleUpdateModels() {
+  updatingModels.value = true;
+  try {
+    const platformMap = await fetchModelsFromDataLearner();
+    const totalModels = Object.values(platformMap).reduce((sum, arr) => sum + arr.length, 0);
+    await saveFetchedModels(platformMap);
+    checkCustomModels();
+    ElMessage.success(`模型更新成功，共 ${totalModels} 个模型`);
+  } catch (e) {
+    ElMessage.error('模型更新失败：' + e.message);
+  } finally {
+    updatingModels.value = false;
+  }
+}
+
+async function handleResetModels() {
+  try {
+    await resetToDefaultModels();
+    checkCustomModels();
+    ElMessage.success('已恢复默认模型列表');
+  } catch (e) {
+    ElMessage.error('恢复失败：' + e.message);
+  }
+}
 
 const filteredTokens = computed(() => {
   let list = [...tokens.value];
@@ -153,6 +218,7 @@ const filteredTokens = computed(() => {
 onMounted(async () => {
   tokens.value = await getTokens();
   settings.value = await getSettings();
+  checkCustomModels();
 });
 
 watch(settings, async (val) => {
@@ -349,5 +415,11 @@ async function handleFileImport(event) {
   font-size: 13px;
   color: #94a3b8;
   line-height: 1.6;
+}
+
+.setting-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
 }
 </style>
