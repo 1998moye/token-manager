@@ -69,3 +69,44 @@ export async function clearAllCustomModels() {
     await chrome.storage.local.remove(customKeys);
   }
 }
+
+// --- 通用 Token ---
+
+const STORAGE_KEY_GENERAL_TOKENS = 'generalTokens';
+
+export async function getGeneralTokens() {
+  const result = await chrome.storage.local.get(STORAGE_KEY_GENERAL_TOKENS);
+  return result[STORAGE_KEY_GENERAL_TOKENS] || [];
+}
+
+export async function saveGeneralTokens(tokens) {
+  await chrome.storage.local.set({ [STORAGE_KEY_GENERAL_TOKENS]: tokens });
+}
+
+export async function addGeneralToken(token) {
+  const tokens = await getGeneralTokens();
+  const newToken = {
+    ...token,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  tokens.push(newToken);
+  await saveGeneralTokens(tokens);
+  return newToken;
+}
+
+export async function updateGeneralToken(id, updates) {
+  const tokens = await getGeneralTokens();
+  const index = tokens.findIndex(t => t.id === id);
+  if (index === -1) throw new Error('Token not found');
+  tokens[index] = { ...tokens[index], ...updates, updatedAt: new Date().toISOString() };
+  await saveGeneralTokens(tokens);
+  return tokens[index];
+}
+
+export async function deleteGeneralToken(id) {
+  const tokens = await getGeneralTokens();
+  const filtered = tokens.filter(t => t.id !== id);
+  await saveGeneralTokens(filtered);
+}
