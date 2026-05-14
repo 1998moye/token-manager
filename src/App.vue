@@ -2,26 +2,24 @@
   <div class="app">
     <!-- 顶部 Header -->
     <div class="app-header">
-      <div class="header-left">
-        <h1 class="app-title">Token 管理器</h1>
-        <!-- 标签页切换 -->
-        <div class="tab-switcher">
-          <button
-            class="tab-btn"
-            :class="{ active: activeTab === 'ai' }"
-            @click="switchTab('ai')"
-          >AI</button>
-          <button
-            class="tab-btn"
-            :class="{ active: activeTab === 'general' }"
-            @click="switchTab('general')"
-          >通用</button>
+      <!-- 第一行：标题 + 数量 + 添加 -->
+      <div class="header-row row-top">
+        <div class="row-left">
+          <h1 class="app-title">Token 管理器</h1>
+          <span class="token-count" v-if="(activeTab === 'ai' ? tokens : generalTokens).length">
+            {{ (activeTab === 'ai' ? tokens : generalTokens).length }} 个
+          </span>
         </div>
-        <span class="token-count" v-if="(activeTab === 'ai' ? tokens : generalTokens).length">
-          {{ (activeTab === 'ai' ? tokens : generalTokens).length }} 个
-        </span>
+        <el-button type="primary" size="small" @click="openAddForm" class="add-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          添加
+        </el-button>
       </div>
-      <div class="header-right">
+      <!-- 第二行：刷新 + 标签切换 + 搜索 -->
+      <div class="header-row row-bottom">
         <el-button
           v-if="activeTab === 'ai'"
           text
@@ -38,11 +36,24 @@
           </svg>
         </el-button>
 
+        <div class="tab-switcher">
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'ai' }"
+            @click="switchTab('ai')"
+          >AI Token</button>
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'general' }"
+            @click="switchTab('general')"
+          >通用 Token</button>
+        </div>
+
         <el-input
           v-model="searchText"
           placeholder="搜索..."
           clearable
-          size="default"
+          size="small"
           class="search-input"
         >
           <template #prefix>
@@ -52,13 +63,6 @@
             </svg>
           </template>
         </el-input>
-        <el-button type="primary" size="default" @click="openAddForm" class="add-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          添加
-        </el-button>
       </div>
     </div>
 
@@ -380,45 +384,50 @@ async function handleFileImport(event) {
 }
 
 .app-header {
-  padding: 16px 16px 12px;
+  padding: 12px 16px;
   background: #fff;
   border-bottom: 1px solid #f1f5f9;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   flex-shrink: 0;
 }
 
-.header-left {
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.row-left {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.row-bottom {
+  gap: 6px;
+}
+
 .app-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.3px;
 }
 
 .token-count {
-  font-size: 12px;
+  font-size: 11px;
   color: #94a3b8;
   background: #f1f5f9;
   padding: 2px 8px;
   border-radius: 10px;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .search-input {
-  width: 140px;
+  flex: 1;
+  min-width: 0;
 }
 
 .add-btn {
@@ -428,8 +437,9 @@ async function handleFileImport(event) {
 }
 
 .refresh-btn {
-  padding: 6px 8px;
+  padding: 5px 6px;
   color: #94a3b8;
+  flex-shrink: 0;
 }
 .refresh-btn:hover {
   color: #3b82f6;
@@ -442,18 +452,20 @@ async function handleFileImport(event) {
   border-radius: 6px;
   padding: 2px;
   gap: 2px;
+  flex-shrink: 0;
 }
 
 .tab-btn {
-  padding: 3px 8px;
+  padding: 3px 10px;
   border: none;
   background: transparent;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
