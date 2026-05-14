@@ -4,10 +4,13 @@
     <div class="app-header">
       <div class="header-left">
         <h1 class="app-title">Token 管理器</h1>
-        <span class="token-count" v-if="tokens.length">{{ tokens.length }} 个</span>
+        <span class="token-count" v-if="(activeTab === 'ai' ? tokens : generalTokens).length">
+          {{ (activeTab === 'ai' ? tokens : generalTokens).length }} 个
+        </span>
       </div>
       <div class="header-right">
         <el-button
+          v-if="activeTab === 'ai'"
           text
           size="small"
           :loading="updatingModels"
@@ -21,6 +24,21 @@
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
           </svg>
         </el-button>
+
+        <!-- 标签页切换 -->
+        <div class="tab-switcher">
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'ai' }"
+            @click="switchTab('ai')"
+          >AI Token</button>
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'general' }"
+            @click="switchTab('general')"
+          >通用</button>
+        </div>
+
         <el-input
           v-model="searchText"
           placeholder="搜索..."
@@ -49,6 +67,15 @@
     <div class="token-list">
       <template v-if="filteredTokens.length > 0">
         <TokenCard
+          v-if="activeTab === 'ai'"
+          v-for="token in filteredTokens"
+          :key="token.id"
+          :token="token"
+          @edit="openEditForm"
+          @delete="openDeleteConfirm"
+        />
+        <GeneralTokenCard
+          v-else
           v-for="token in filteredTokens"
           :key="token.id"
           :token="token"
@@ -66,7 +93,7 @@
             <line x1="12" y1="22.08" x2="12" y2="12"/>
           </svg>
         </div>
-        <p class="empty-title">还没有 Token</p>
+        <p class="empty-title">{{ activeTab === 'general' ? '还没有通用 Token' : '还没有 Token' }}</p>
         <p class="empty-desc">点击上方「添加」按钮来添加你的第一个 Token</p>
         <el-button type="primary" @click="openAddForm" size="default">添加 Token</el-button>
       </div>
@@ -94,7 +121,7 @@
         </svg>
         导入
       </el-button>
-      <el-button text size="small" @click="handleExport" :disabled="!tokens.length">
+      <el-button text size="small" @click="handleExport" :disabled="!(activeTab === 'ai' ? tokens : generalTokens).length">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7,10 12,15 17,10"/>
@@ -107,17 +134,24 @@
     <!-- 隐藏的文件输入 -->
     <input type="file" ref="fileInputRef" accept=".json" style="display:none" @change="handleFileImport" />
 
-    <!-- 表单弹窗（右侧抽屉） -->
+    <!-- AI Token 表单弹窗 -->
     <TokenForm
       v-model="formVisible"
       :token="currentToken"
       @submit="handleFormSubmit"
     />
 
+    <!-- 通用 Token 表单弹窗 -->
+    <GeneralTokenForm
+      v-model="generalFormVisible"
+      :token="currentGeneralToken"
+      @submit="handleGeneralFormSubmit"
+    />
+
     <!-- 删除确认 -->
     <ConfirmDialog
       v-model="deleteVisible"
-      :token-name="currentToken?.name"
+      :token-name="(activeTab === 'general' ? currentGeneralToken : currentToken)?.name"
       @confirm="handleDelete"
     />
   </div>
@@ -128,15 +162,34 @@ import { ref, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import TokenCard from './components/TokenCard.vue';
 import TokenForm from './components/TokenForm.vue';
+import GeneralTokenCard from './components/GeneralTokenCard.vue';
+import GeneralTokenForm from './components/GeneralTokenForm.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
-import { getTokens, addToken, updateToken, deleteToken, saveTokens } from './services/storage.js';
+import { getTokens, addToken, updateToken, deleteToken, saveTokens, getGeneralTokens, addGeneralToken, updateGeneralToken, deleteGeneralToken, saveGeneralTokens } from './services/storage.js';
 import { fetchModelsFromDataLearner, saveFetchedModels } from './services/modelUpdater.js';
 
+// 当前标签页：'ai' | 'general'
+const activeTab = ref('ai');
+
+// AI Token 数据
 const tokens = ref([]);
+
+// 通用 Token 数据
+const generalTokens = ref([]);
+
 const searchText = ref('');
+
+// AI Token 表单
 const formVisible = ref(false);
 const currentToken = ref(null);
+
+// 通用 Token 表单
+const generalFormVisible = ref(false);
+const currentGeneralToken = ref(null);
+
+// 删除确认
 const deleteVisible = ref(false);
+
 const fileInputRef = ref(null);
 const updatingModels = ref(false);
 
@@ -154,7 +207,22 @@ async function handleUpdateModels() {
   }
 }
 
+function switchTab(tab) {
+  activeTab.value = tab;
+  searchText.value = '';
+}
+
 const filteredTokens = computed(() => {
+  if (activeTab.value === 'general') {
+    if (!searchText.value) return generalTokens.value;
+    const q = searchText.value.toLowerCase();
+    return generalTokens.value.filter(t =>
+      (t.name || '').toLowerCase().includes(q) ||
+      (t.category || '').toLowerCase().includes(q) ||
+      (t.remark || '').toLowerCase().includes(q)
+    );
+  }
+  // AI Token
   if (!searchText.value) return tokens.value;
   const q = searchText.value.toLowerCase();
   return tokens.value.filter(t =>
@@ -167,20 +235,35 @@ const filteredTokens = computed(() => {
 
 onMounted(async () => {
   tokens.value = await getTokens();
+  generalTokens.value = await getGeneralTokens();
 });
 
 function openAddForm() {
-  currentToken.value = null;
-  formVisible.value = true;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = null;
+    generalFormVisible.value = true;
+  } else {
+    currentToken.value = null;
+    formVisible.value = true;
+  }
 }
 
 function openEditForm(token) {
-  currentToken.value = { ...token };
-  formVisible.value = true;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = { ...token };
+    generalFormVisible.value = true;
+  } else {
+    currentToken.value = { ...token };
+    formVisible.value = true;
+  }
 }
 
 function openDeleteConfirm(token) {
-  currentToken.value = token;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = token;
+  } else {
+    currentToken.value = token;
+  }
   deleteVisible.value = true;
 }
 
@@ -201,26 +284,65 @@ async function handleFormSubmit(formData) {
   }
 }
 
-async function handleDelete() {
-  if (!currentToken.value) return;
+async function handleGeneralFormSubmit(formData) {
   try {
-    await deleteToken(currentToken.value.id);
-    tokens.value = tokens.value.filter(t => t.id !== currentToken.value.id);
-    ElMessage.success('已删除');
+    if (currentGeneralToken.value?.id) {
+      const updated = await updateGeneralToken(currentGeneralToken.value.id, formData);
+      const idx = generalTokens.value.findIndex(t => t.id === currentGeneralToken.value.id);
+      if (idx !== -1) generalTokens.value[idx] = updated;
+      ElMessage.success('已更新');
+    } else {
+      const added = await addGeneralToken(formData);
+      generalTokens.value.unshift(added);
+      ElMessage.success('已添加');
+    }
   } catch (e) {
-    ElMessage.error('删除失败');
+    ElMessage.error('保存失败');
+  }
+}
+
+async function handleDelete() {
+  if (activeTab.value === 'general') {
+    if (!currentGeneralToken.value) return;
+    try {
+      await deleteGeneralToken(currentGeneralToken.value.id);
+      generalTokens.value = generalTokens.value.filter(t => t.id !== currentGeneralToken.value.id);
+      ElMessage.success('已删除');
+    } catch (e) {
+      ElMessage.error('删除失败');
+    }
+  } else {
+    if (!currentToken.value) return;
+    try {
+      await deleteToken(currentToken.value.id);
+      tokens.value = tokens.value.filter(t => t.id !== currentToken.value.id);
+      ElMessage.success('已删除');
+    } catch (e) {
+      ElMessage.error('删除失败');
+    }
   }
 }
 
 function handleExport() {
-  const data = JSON.stringify(tokens.value, null, 2);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ai-tokens-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  if (activeTab.value === 'general') {
+    const data = JSON.stringify(generalTokens.value, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `general-tokens-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } else {
+    const data = JSON.stringify(tokens.value, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-tokens-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 }
 
 function handleImport() {
@@ -234,9 +356,15 @@ async function handleFileImport(event) {
     const text = await file.text();
     const imported = JSON.parse(text);
     if (!Array.isArray(imported)) throw new Error('格式错误');
-    await saveTokens(imported);
-    tokens.value = imported;
-    ElMessage.success(`导入成功 ${imported.length} 条`);
+    if (activeTab.value === 'general') {
+      await saveGeneralTokens(imported);
+      generalTokens.value = imported;
+      ElMessage.success(`导入成功 ${imported.length} 条`);
+    } else {
+      await saveTokens(imported);
+      tokens.value = imported;
+      ElMessage.success(`导入成功 ${imported.length} 条`);
+    }
   } catch (e) {
     ElMessage.error('导入失败');
   }
@@ -306,6 +434,37 @@ async function handleFileImport(event) {
 }
 .refresh-btn:hover {
   color: #3b82f6;
+}
+
+.tab-switcher {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.tab-btn {
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #3b82f6;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn:hover:not(.active) {
+  color: #475569;
 }
 
 .token-list {
