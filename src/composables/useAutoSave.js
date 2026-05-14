@@ -1,19 +1,17 @@
 import { ref, watch, onUnmounted } from 'vue';
 
-const DRAFT_KEY = 'token-form-draft';
-
 /**
  * 表单自动保存 composable
- * @param {Ref} formRef - 表单 ref
  * @param {Function} getFormData - 获取表单数据的函数
+ * @param {string} storageKey - localStorage key，默认 'token-form-draft'
  */
-export function useAutoSave(getFormData) {
+export function useAutoSave(getFormData, storageKey = 'token-form-draft') {
   const isRestored = ref(false);
 
   // 恢复草稿
   function restoreDraft() {
     try {
-      const draft = localStorage.getItem(DRAFT_KEY);
+      const draft = localStorage.getItem(storageKey);
       if (draft) {
         return JSON.parse(draft);
       }
@@ -26,7 +24,7 @@ export function useAutoSave(getFormData) {
   // 保存草稿
   function saveDraft(data) {
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+      localStorage.setItem(storageKey, JSON.stringify(data));
     } catch (e) {
       // ignore - storage 可能满
     }
@@ -34,12 +32,12 @@ export function useAutoSave(getFormData) {
 
   // 清除草稿
   function clearDraft() {
-    localStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem(storageKey);
   }
 
   // 检查是否有草稿
   function hasDraft() {
-    return localStorage.getItem(DRAFT_KEY) !== null;
+    return localStorage.getItem(storageKey) !== null;
   }
 
   // 手动保存
