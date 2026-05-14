@@ -4,6 +4,19 @@
     <div class="app-header">
       <div class="header-left">
         <h1 class="app-title">Token 管理器</h1>
+        <!-- 标签页切换 -->
+        <div class="tab-switcher">
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'ai' }"
+            @click="switchTab('ai')"
+          >AI</button>
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'general' }"
+            @click="switchTab('general')"
+          >通用</button>
+        </div>
         <span class="token-count" v-if="(activeTab === 'ai' ? tokens : generalTokens).length">
           {{ (activeTab === 'ai' ? tokens : generalTokens).length }} 个
         </span>
@@ -24,20 +37,6 @@
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
           </svg>
         </el-button>
-
-        <!-- 标签页切换 -->
-        <div class="tab-switcher">
-          <button
-            class="tab-btn"
-            :class="{ active: activeTab === 'ai' }"
-            @click="switchTab('ai')"
-          >AI Token</button>
-          <button
-            class="tab-btn"
-            :class="{ active: activeTab === 'general' }"
-            @click="switchTab('general')"
-          >通用</button>
-        </div>
 
         <el-input
           v-model="searchText"
@@ -446,11 +445,11 @@ async function handleFileImport(event) {
 }
 
 .tab-btn {
-  padding: 4px 10px;
+  padding: 3px 8px;
   border: none;
   background: transparent;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: #64748b;
   cursor: pointer;
