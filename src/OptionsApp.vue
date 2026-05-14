@@ -9,6 +9,20 @@
     <div class="options-main">
       <!-- 左侧：Token 列表 -->
       <div class="panel-left">
+        <!-- 标签页切换 -->
+        <div class="tab-switcher">
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'ai' }"
+            @click="switchTab('ai')"
+          >AI Token</button>
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'general' }"
+            @click="switchTab('general')"
+          >通用 Token</button>
+        </div>
+
         <div class="panel-toolbar">
           <el-input
             v-model="searchText"
@@ -35,6 +49,15 @@
         <div class="token-list">
           <template v-if="filteredTokens.length > 0">
             <TokenCard
+              v-if="activeTab === 'ai'"
+              v-for="token in filteredTokens"
+              :key="token.id"
+              :token="token"
+              @edit="openEditForm"
+              @delete="openDeleteConfirm"
+            />
+            <GeneralTokenCard
+              v-else
               v-for="token in filteredTokens"
               :key="token.id"
               :token="token"
@@ -43,7 +66,7 @@
             />
           </template>
           <div v-else-if="!searchText" class="empty-hint">
-            <p>暂无 Token，点击「添加 Token」开始</p>
+            <p>{{ activeTab === 'general' ? '暂无通用 Token，点击「添加 Token」开始' : '暂无 Token，点击「添加 Token」开始' }}</p>
           </div>
           <div v-else class="empty-hint">
             <p>未找到匹配项</p>
@@ -53,7 +76,7 @@
         <!-- 底部导入导出 -->
         <div class="list-footer">
           <el-button text size="small" @click="handleImport">导入 JSON</el-button>
-          <el-button text size="small" @click="handleExport" :disabled="!tokens.length">导出 JSON</el-button>
+          <el-button text size="small" @click="handleExport" :disabled="!(activeTab === 'ai' ? tokens : generalTokens).length">导出 JSON</el-button>
         </div>
       </div>
 
@@ -68,7 +91,7 @@
               <el-option label="最近更新" value="updatedAt" />
               <el-option label="创建时间" value="createdAt" />
               <el-option label="名称" value="name" />
-              <el-option label="平台" value="platform" />
+              <el-option v-if="activeTab === 'ai'" label="平台" value="platform" />
             </el-select>
             <el-select v-model="settings.sortOrder" size="default" style="width: 90px">
               <el-option label="倒序" value="desc" />
@@ -79,10 +102,8 @@
 
         <div class="setting-group">
           <label class="setting-label">Token 总数</label>
-          <span class="setting-value">{{ tokens.length }} 个</span>
+          <span class="setting-value">{{ (activeTab === 'ai' ? tokens : generalTokens).length }} 个</span>
         </div>
-
-        <el-divider />
 
         <el-divider />
 
@@ -128,17 +149,24 @@
     <!-- 隐藏的文件输入 -->
     <input type="file" ref="fileInputRef" accept=".json" style="display:none" @change="handleFileImport" />
 
-    <!-- 表单弹窗 -->
+    <!-- AI Token 表单弹窗 -->
     <TokenForm
       v-model="formVisible"
       :token="currentToken"
       @submit="handleFormSubmit"
     />
 
+    <!-- 通用 Token 表单弹窗 -->
+    <GeneralTokenForm
+      v-model="generalFormVisible"
+      :token="currentGeneralToken"
+      @submit="handleGeneralFormSubmit"
+    />
+
     <!-- 删除确认 -->
     <ConfirmDialog
       v-model="deleteVisible"
-      :token-name="currentToken?.name"
+      :token-name="(activeTab === 'general' ? currentGeneralToken : currentToken)?.name"
       @confirm="handleDelete"
     />
   </div>
@@ -149,15 +177,22 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import TokenCard from './components/TokenCard.vue';
 import TokenForm from './components/TokenForm.vue';
+import GeneralTokenCard from './components/GeneralTokenCard.vue';
+import GeneralTokenForm from './components/GeneralTokenForm.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
-import { getTokens, addToken, updateToken, deleteToken, saveTokens, getSettings, saveSettings } from './services/storage.js';
+import { getTokens, addToken, updateToken, deleteToken, saveTokens, getGeneralTokens, addGeneralToken, updateGeneralToken, deleteGeneralToken, saveGeneralTokens, getSettings, saveSettings } from './services/storage.js';
 import { fetchModelsFromDataLearner, saveFetchedModels, resetToDefaultModels } from './services/modelUpdater.js';
 import { getCustomModelsState } from './data/platforms.js';
 
+const activeTab = ref('ai');
+
 const tokens = ref([]);
+const generalTokens = ref([]);
 const searchText = ref('');
 const formVisible = ref(false);
 const currentToken = ref(null);
+const generalFormVisible = ref(false);
+const currentGeneralToken = ref(null);
 const deleteVisible = ref(false);
 const fileInputRef = ref(null);
 const settings = ref({ sortBy: 'updatedAt', sortOrder: 'desc' });
@@ -194,16 +229,29 @@ async function handleResetModels() {
   }
 }
 
+function switchTab(tab) {
+  activeTab.value = tab;
+  searchText.value = '';
+}
+
 const filteredTokens = computed(() => {
-  let list = [...tokens.value];
+  let list = activeTab.value === 'general' ? [...generalTokens.value] : [...tokens.value];
   if (searchText.value) {
     const q = searchText.value.toLowerCase();
-    list = list.filter(t =>
-      (t.name || '').toLowerCase().includes(q) ||
-      (t.platform || '').toLowerCase().includes(q) ||
-      (t.model || '').toLowerCase().includes(q) ||
-      (t.baseUrl || '').toLowerCase().includes(q)
-    );
+    if (activeTab.value === 'general') {
+      list = list.filter(t =>
+        (t.name || '').toLowerCase().includes(q) ||
+        (t.category || '').toLowerCase().includes(q) ||
+        (t.remark || '').toLowerCase().includes(q)
+      );
+    } else {
+      list = list.filter(t =>
+        (t.name || '').toLowerCase().includes(q) ||
+        (t.platform || '').toLowerCase().includes(q) ||
+        (t.model || '').toLowerCase().includes(q) ||
+        (t.baseUrl || '').toLowerCase().includes(q)
+      );
+    }
   }
   // 排序
   list.sort((a, b) => {
@@ -217,6 +265,7 @@ const filteredTokens = computed(() => {
 
 onMounted(async () => {
   tokens.value = await getTokens();
+  generalTokens.value = await getGeneralTokens();
   settings.value = await getSettings();
   checkCustomModels();
 });
@@ -226,17 +275,31 @@ watch(settings, async (val) => {
 }, { deep: true });
 
 function openAddForm() {
-  currentToken.value = null;
-  formVisible.value = true;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = null;
+    generalFormVisible.value = true;
+  } else {
+    currentToken.value = null;
+    formVisible.value = true;
+  }
 }
 
 function openEditForm(token) {
-  currentToken.value = { ...token };
-  formVisible.value = true;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = { ...token };
+    generalFormVisible.value = true;
+  } else {
+    currentToken.value = { ...token };
+    formVisible.value = true;
+  }
 }
 
 function openDeleteConfirm(token) {
-  currentToken.value = token;
+  if (activeTab.value === 'general') {
+    currentGeneralToken.value = token;
+  } else {
+    currentToken.value = token;
+  }
   deleteVisible.value = true;
 }
 
@@ -257,26 +320,65 @@ async function handleFormSubmit(formData) {
   }
 }
 
-async function handleDelete() {
-  if (!currentToken.value) return;
+async function handleGeneralFormSubmit(formData) {
   try {
-    await deleteToken(currentToken.value.id);
-    tokens.value = tokens.value.filter(t => t.id !== currentToken.value.id);
-    ElMessage.success('已删除');
+    if (currentGeneralToken.value?.id) {
+      const updated = await updateGeneralToken(currentGeneralToken.value.id, formData);
+      const idx = generalTokens.value.findIndex(t => t.id === currentGeneralToken.value.id);
+      if (idx !== -1) generalTokens.value[idx] = updated;
+      ElMessage.success('已更新');
+    } else {
+      const added = await addGeneralToken(formData);
+      generalTokens.value.unshift(added);
+      ElMessage.success('已添加');
+    }
   } catch (e) {
-    ElMessage.error('删除失败');
+    ElMessage.error('保存失败');
+  }
+}
+
+async function handleDelete() {
+  if (activeTab.value === 'general') {
+    if (!currentGeneralToken.value) return;
+    try {
+      await deleteGeneralToken(currentGeneralToken.value.id);
+      generalTokens.value = generalTokens.value.filter(t => t.id !== currentGeneralToken.value.id);
+      ElMessage.success('已删除');
+    } catch (e) {
+      ElMessage.error('删除失败');
+    }
+  } else {
+    if (!currentToken.value) return;
+    try {
+      await deleteToken(currentToken.value.id);
+      tokens.value = tokens.value.filter(t => t.id !== currentToken.value.id);
+      ElMessage.success('已删除');
+    } catch (e) {
+      ElMessage.error('删除失败');
+    }
   }
 }
 
 function handleExport() {
-  const data = JSON.stringify(tokens.value, null, 2);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ai-tokens-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  if (activeTab.value === 'general') {
+    const data = JSON.stringify(generalTokens.value, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `general-tokens-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } else {
+    const data = JSON.stringify(tokens.value, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-tokens-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 }
 
 function handleImport() {
@@ -290,9 +392,15 @@ async function handleFileImport(event) {
     const text = await file.text();
     const imported = JSON.parse(text);
     if (!Array.isArray(imported)) throw new Error('格式错误');
-    await saveTokens(imported);
-    tokens.value = imported;
-    ElMessage.success(`导入成功 ${imported.length} 条`);
+    if (activeTab.value === 'general') {
+      await saveGeneralTokens(imported);
+      generalTokens.value = imported;
+      ElMessage.success(`导入成功 ${imported.length} 条`);
+    } else {
+      await saveTokens(imported);
+      tokens.value = imported;
+      ElMessage.success(`导入成功 ${imported.length} 条`);
+    }
   } catch (e) {
     ElMessage.error('导入失败');
   }
@@ -335,6 +443,38 @@ async function handleFileImport(event) {
   border-right: 1px solid #e2e8f0;
 }
 
+.tab-switcher {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.tab-btn {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #3b82f6;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn:hover:not(.active) {
+  color: #475569;
+}
+
 .panel-toolbar {
   display: flex;
   align-items: center;
@@ -351,7 +491,7 @@ async function handleFileImport(event) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 280px);
   overflow-y: auto;
   padding-right: 4px;
 }
